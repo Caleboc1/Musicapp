@@ -13,6 +13,8 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.example.musicapp.ui.theme.MusicAppTheme
 import retrofit2.Call
 import retrofit2.Callback
@@ -23,6 +25,9 @@ import retrofit2.create
 import retrofit2.http.Query
 
 class MainActivity : ComponentActivity() {
+
+    lateinit var myRecyclerView: RecyclerView
+    lateinit var myAdapter: MyAdapter
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 //        enableEdgeToEdge()
@@ -37,6 +42,8 @@ class MainActivity : ComponentActivity() {
 //                }
 //            }
 //        }
+
+        myRecyclerView= findViewById(R.id.recyclerView)
         val retrofitBuilders= Retrofit.Builder()
             .baseUrl("https://deezerdevs-deezer.p.rapidapi.com/")
             .addConverterFactory(GsonConverterFactory.create())
@@ -48,9 +55,13 @@ class MainActivity : ComponentActivity() {
         retrofitData.enqueue(object : Callback<MyData?> {
             override fun onResponse(call: Call<MyData?>, response: Response<MyData?>) {
                 //if the API call is a success the this method is executed
-                val dataList= response.body()?.data
-                val textView= findViewById<TextView>(R.id.helloText)
-                textView.text= dataList.toString()
+                val dataList= response.body()?.data!!
+//                val textView= findViewById<TextView>(R.id.helloText)
+//                textView.text= dataList.toString()
+
+                myAdapter= MyAdapter(this@MainActivity, dataList)
+                myRecyclerView.adapter= myAdapter
+                myRecyclerView.layoutManager= LinearLayoutManager(this@MainActivity)
                 Log.d("TAG: onResponse", "onResponse: " + response.body())
             }
 

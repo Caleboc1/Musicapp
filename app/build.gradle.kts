@@ -76,5 +76,8 @@ dependencies {
     //gson converter
     implementation("com.squareup.retrofit2:converter-gson:2.9.0")
 
+    //picaso for converting image link given into api
+    implementation("com.squareup.picasso:picasso:2.8")
+
 
 }
